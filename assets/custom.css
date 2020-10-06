@@ -1,0 +1,102 @@
+input.form-control {
+  max-width: 25em;
+}
+
+#environmentHost {
+  display: inline;
+  margin-left: 0.5em;
+  margin-right: 0.5em;
+}
+
+#saveUrl {
+  display: inline;
+}
+
+#envp {
+  margin-bottom: 0;
+}
+
+body .modal-dialog {
+  max-width: 600px;
+  width: auto !important;
+}
+
+.modal {
+  text-align: center;
+}
+
+#gif1 {
+  display: none;
+}
+
+#clickcode {
+  font-size: x-small;
+}
+
+.form-control {
+    border: 4px solid #ced4da;
+}
+
+.loading {
+    opacity: 0.5;
+}
+
+.hide {
+    display: none;
+}
+
+.navbar {
+    padding-top: 0.2rem;
+    padding-bottom: 0.2rem;
+}
+
+.ds-logo {
+    padding-right: 0.9rem;
+    border-right: 1px solid #ffffff;
+}
+
+.ds-logo-text {
+    padding-left: 0.9rem;
+    font-size: 1rem;
+}
+
+.blue {
+    background-color: #1b49a0 !important;
+}
+
+.loader {
+    display: none;
+    border: 12px solid #ff3add;
+    border-radius: 50%;
+    border-top: 12px solid #00ed00;
+    border-right: 12px solid #d5fa00;
+    border-bottom: 12px solid #0ac5ff;
+    width: 50px;
+    height: 50px;
+    -webkit-animation: spin 2s linear infinite;
+    animation: spin 2s linear infinite;
+    position: absolute;
+    left: 50%;
+    top: 45%;
+    margin-left: -30px;
+  }
+  
+  @-webkit-keyframes spin {
+    0% {
+      -webkit-transform: rotate(0deg);
+    }
+  
+    100% {
+      -webkit-transform: rotate(360deg);
+    }
+  }
+  
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+  
+    100% {
+      transform: rotate(360deg);
+    }
+}

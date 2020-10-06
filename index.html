@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Click Demo Builder</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="shortcut icon" href="assets/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="assets/custom.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+
+<body>
+
+  <nav class="navbar navbar-dark blue mb-3">
+    <div class="navbar-brand d-flex flex-row">
+      <img class="ds-logo" src="assets/docusign-logo.png" height="26px" />
+      <div class="ds-logo-text">Click Demo Builder</div>
+    </div>
+  </nav>
+
+  <div class="collapse" id="helpSection">
+    <div class="container">
+      <div class="row">
+        <div class="col-12 py-3">
+          <h4>Creating a Clickwrap agreement</h4>
+          <ol>
+            <li>Log into DocuSign, click <strong>Manage</strong> at the top of the screen.</li>
+            <li>Click <strong>Clickwraps</strong> at the top of the screen</li>
+            <li>Create a clickwrap agreement</li>
+            <li>Click the <strong>Get Code</strong> button on the right side to open the code window.</li>
+            <li>Click the <strong>Copy</strong> button in the code window, then paste into the form below.</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-12">
+        <h4>Complete this form by using the <i>Code</i> window of your clickwrap
+
+          <button class="ml-1 my-3 btn btn-sm btn-outline-info" type="button" data-toggle="collapse"
+            data-target="#helpSection" aria-controls="navbarHeader" aria-expanded="false"
+            aria-label="Toggle navigation">
+            Show help for creating a Clickwrap
+          </button>
+        </h4>
+
+
+        <form>
+          <div class="form-group">
+            <label for="clickcode">Copy your Clickwrap code block into this field
+              <button type="button" class="btn-sm btn-outline-info m-1" data-toggle="modal" data-target="#gifModal">
+                Show me
+              </button>
+            </label>
+            <p>
+              <textarea class="form-control w-75" id="clickcode" aria-describedby="clickcodeHelp" required rows="4"
+                cols="90"></textarea>
+            </p>
+            <small id="clickcodeHelp" class="form-text text-muted">
+              This field is required: Use the <b>Get Code</b> button from the DocuSign webtool.
+              Copy the entire Clickwrap code block into this field.</small>
+            <small id="feedback" class="form-text text-muted"></small>
+          </div>
+        
+
+          <button class="mb-3 btn btn-sm btn-outline-info font-weight-bold" type="button" data-toggle="collapse"
+            data-target="#customSection" aria-controls="navbarHeader" aria-expanded="false"
+            aria-label="Toggle navigation">
+            Custom Options
+          </button>
+
+          <div class="collapse" id="customSection">
+            <div class="container">
+              <div class="row">
+                <div class="col-12">
+                  <div class="ml-3">
+                    <div class="form-group">
+                      <label>Header Image <small>optional</small></label>
+                      <input type="file" accept="image/*" class="form-control-file" id="fileUpload">
+                    </div>
+                    <div class="form-group">
+                      <label>Form Title</label>
+                      <input type="text" class="form-control" id="title" value="Sign In" required>
+                    </div>
+                    <div class="form-group">
+                      <label>Field Name</label>
+                      <input type="text" class="form-control" id="fieldName" value="Email Address" required>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+
+          <p><strong>Save your custom demo URL</strong>
+            <br /><input type="text" class="form-control input-sm" id="saveUrl">
+            <button class="m-2 btn btn-sm btn-outline-info" type="button" id="saveUrlBtn" aria-expanded="false"
+              aria-label="Copy to clipboard">
+              Copy to clipboard
+            </button>
+          </p>
+
+          <button id="clickSubmit" type="submit" class="btn btn-primary blue">Build Custom Demo</button>
+          <p>&nbsp;</p>
+          <p>&nbsp;</p>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Spinner -->
+  <div id="loader" class="loader"></div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="gifModal" tabindex="-1" role="dialog" aria-labelledby="gifModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="gifModalLabel">Copying the Clickwrap code to this form</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="container-fluid">
+            <img id="gif1" width="500" />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary blue" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  <script>
+    $(document).ready(function () {
+
+      let accountId, clickwrapId, environmentHost, title, fieldName;
+
+      let headerName = "default";
+
+      $('#fileUpload').change(function() {
+        document.getElementById("loader").style.display = "block";
+        document.getElementById('clickSubmit').disabled = true;
+        this.disabled = true;
+
+        let file = this.files[0];
+        if (file != undefined) {
+          let randomString = Math.random().toString(36).substr(2, 5);
+          let ext = file.name.substring(file.name.lastIndexOf('.') + 1);
+          headerName = randomString + "." + ext;
+
+          formData = new FormData();
+          formData.append("image", file, headerName);
+          $.ajax({
+            url: "upload.php",
+            type: "POST",
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: (data) => {
+              urlUpdate();
+              document.getElementById("loader").style.display = "none";
+              document.getElementById('clickSubmit').disabled = false;
+            }
+          });
+        }
+      })
+
+      /**
+       * sets accountId, clickwrapId, environmentHost
+       * Returns ok
+       */
+      function parseClickcode() {
+        $('#feedback').html('');
+        let raw = $("#clickcode").val()
+          , clickwrapRegex = /https:\/\/(\w+).docusign.net'[\s\S]*accountId: '([0-9a-zA-Z\-]+)'[\s\S]*clickwrapId: '([0-9a-zA-Z\-]+)'/gm
+          , matchArray = clickwrapRegex.exec(raw)
+          ;
+        if (matchArray == null) {
+          return false; // no cigar!
+        }
+        environmentHost = matchArray[1];
+        accountId = matchArray[2];
+        clickwrapId = matchArray[3];
+        title = $("#title").val();
+        fieldName = $("#fieldName").val();
+        return true
+      }
+
+      function valuesString() {
+        let ok = parseClickcode();
+        if (!ok) { return "#" }
+        return "#a=" + accountId + "&cw=" + clickwrapId +
+          "&eh=" + environmentHost + "&hi=" + headerName + "&title=" + title + "&field=" + fieldName;
+      }
+
+      let onClick = function _onClick() {
+        const values = valuesString()
+          , validForm = $("form")[0].reportValidity();
+
+        if (values && validForm) {
+          // valid
+          const url = "demo.html" + values;
+          window.location = encodeURI(url);
+        }
+        return false;
+      }
+
+      function urlUpdate() {
+        const values = valuesString()
+          , raw = window.location.href
+          , i = raw.indexOf('#')
+          , base = i == -1 ? raw : raw.substring(0, i - 1)
+          , url = encodeURI(base + "demo.html" + values);
+        $("#saveUrl").val(url)
+      }
+
+      let copyToClipboad = function _copyToClipboard() {
+        // Copy the saveUrl value to the clipboard
+        // See https://stackoverflow.com/q/22581345/64904
+        var $temp = $("<input>");
+        $("body").append($temp);
+        $temp.val($("#saveUrl").val()).select();
+        document.execCommand("copy");
+        $temp.remove();
+      }
+
+      let gifShow = function _gifShow() {
+        // See https://stackoverflow.com/a/21104927/64904
+        let src = "assets/clickwrap.gif"
+          , timeout = 0 // no delay
+          , $gif1 = $("#gif1")
+          ;
+        $gif1.show();
+        setTimeout(function () {
+          $gif1.attr('src', src);
+        }, timeout);
+      }
+
+      // The mainline
+      $("#clickSubmit").click(onClick);
+      $("#saveUrlBtn").click(copyToClipboad);
+      $("#clickcode").keyup(urlUpdate);
+      $("#title").keyup(urlUpdate);
+      $("#field").keyup(urlUpdate);
+      $("#gifModal").on("shown.bs.modal", gifShow);
+      urlUpdate();
+    });
+  </script>
+</body>
+
+</html>
