@@ -6,16 +6,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>DocuSign Click Demo</title>
     <link rel="shortcut icon" href="assets/favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="assets/custom.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/custom.css?v2">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css" />
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-140351915-2"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-140351915-2');
+    </script>
+
 </head>
 
 <body>
 
     <image id="customHeader" class="hide" width="100%" />
 
-    <nav id="defaultHeader" class="navbar navbar-dark blue">
-        <div class="navbar-brand d-flex flex-row">
+    <nav id="defaultHeader" class="navbar navbar-dark bg-darkblue pt-1 pb-0">
+        <div class="navbar-brand d-flex flex-row" href="#">
             <img class="ds-logo" src="assets/docusign-logo.png" height="26px" />
             <div class="ds-logo-text">Click Demo Builder</div>
         </div>
@@ -30,7 +42,6 @@
                         <h1 id="title" class="my-3 text-secondary">Sign In</h1>
                         <div id="clickwrap"></div>
 
-
                         <div class="text-center hide" id="finish">
                             <p id="finishText" class="lead text-muted my-5">You've already given consent
                             </p>
@@ -40,18 +51,19 @@
                             </a>
                         </div>
 
-
                         <div id="content">
                             <form id="form" autocomplete="off" class="text-left">
 
                                 <div class="form-group">
                                     <label id="fieldLabel">Email Address</label>
-                                    <input type="text" class="form-control" autocomplete="new-password" id="fieldInput" required>
+                                    <input type="text" class="form-control" autocomplete="new-password" id="fieldInput"
+                                        required>
                                 </div>
 
                                 <div class="form-group">
                                     <label>Password</label>
-                                    <input type="password" class="form-control" id="pw" autocomplete="new-password" aria-describedby="pwHelp">
+                                    <input type="password" class="form-control" id="pw" autocomplete="new-password"
+                                        aria-describedby="pwHelp">
                                     <small id="pwHelp" class="form-text text-muted">
                                         Use any value. In this example, the password is not checked.</small>
                                 </div>
@@ -74,11 +86,10 @@
     </main>
 
     <!-- Spinner -->
-    <div id="loader" class="loader"></div>
+    <div id="spinner" class="spinner"></div>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.min.js"></script>
     <script src="https://demo.docusign.net/clickapi/sdk/latest/docusign-click.js"></script>
 
     <script>
@@ -113,20 +124,20 @@
         function startClickwrap() {
 
             let agreed = function _agreed() {
-                $("#loader").hide();
+                $("#spinner").hide();
                 $("#content").hide();
                 $("#finish").show();
             }
 
             let mustAgree = function _mustAgree() {
-                $("#loader").hide();
+                $("#spinner").hide();
                 $("#content").hide();
                 let text = "Thank you for providing consent";
                 document.getElementById('finishText').innerHTML = text;
             }
 
             let declined = function _declined() {
-                $("#loader").hide();
+                $("#spinner").hide();
                 $("#content").hide();
                 let text = "You have declined the agreement";
                 document.getElementById('finishText').innerHTML = text;
@@ -156,8 +167,8 @@
             }
 
             if ($("form")[0].reportValidity()) {
-                $("*", "#form").prop('disabled',true);
-                $("#loader").show();
+                $("*", "#form").prop('disabled', true);
+                $("#spinner").show();
                 startClickwrap();
             }
 

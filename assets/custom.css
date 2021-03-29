@@ -45,11 +45,6 @@ body .modal-dialog {
     display: none;
 }
 
-.navbar {
-    padding-top: 0.2rem;
-    padding-bottom: 0.2rem;
-}
-
 .ds-logo {
     padding-right: 0.9rem;
     border-right: 1px solid #ffffff;
@@ -60,11 +55,11 @@ body .modal-dialog {
     font-size: 1rem;
 }
 
-.blue {
-    background-color: #1b49a0 !important;
+.bg-darkblue {
+  background-color: #000032;
 }
 
-.loader {
+.spinner {
     display: none;
     border: 12px solid #ff3add;
     border-radius: 50%;
@@ -81,21 +76,10 @@ body .modal-dialog {
     margin-left: -30px;
   }
   
-  @-webkit-keyframes spin {
-    0% {
-      -webkit-transform: rotate(0deg);
-    }
-  
-    100% {
-      -webkit-transform: rotate(360deg);
-    }
-  }
-  
   @keyframes spin {
     0% {
       transform: rotate(0deg);
     }
-  
     100% {
       transform: rotate(360deg);
     }

@@ -6,14 +6,24 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="shortcut icon" href="assets/favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="assets/custom.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="assets/custom.css?v2">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css" />
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-140351915-2"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'UA-140351915-2');
+  </script>
+
 </head>
 
 <body>
 
-  <nav class="navbar navbar-dark blue mb-3">
-    <div class="navbar-brand d-flex flex-row">
+  <nav class="navbar navbar-dark bg-darkblue pt-1 pb-0">
+    <div class="navbar-brand d-flex flex-row" href="#">
       <img class="ds-logo" src="assets/docusign-logo.png" height="26px" />
       <div class="ds-logo-text">Click Demo Builder</div>
     </div>
@@ -36,39 +46,38 @@
     </div>
   </div>
 
-
   <div class="container">
     <div class="row align-items-center">
       <div class="col-12">
         <h4>Complete this form by using the <i>Code</i> window of your clickwrap
 
-          <button class="ml-1 my-3 btn btn-sm btn-outline-info" type="button" data-toggle="collapse"
+          <button class="ml-1 my-3 btn btn-sm btn-outline-primary" type="button" data-toggle="collapse"
             data-target="#helpSection" aria-controls="navbarHeader" aria-expanded="false"
             aria-label="Toggle navigation">
             Show help for creating a Clickwrap
           </button>
         </h4>
 
-
         <form>
           <div class="form-group">
             <label for="clickcode">Copy your Clickwrap code block into this field
-              <button type="button" class="btn-sm btn-outline-info m-1" data-toggle="modal" data-target="#gifModal">
+              <button type="button" class="btn-sm btn-outline-primary m-1" data-toggle="modal" data-target="#gifModal">
                 Show me
               </button>
             </label>
             <p>
               <textarea class="form-control w-75" id="clickcode" aria-describedby="clickcodeHelp" required rows="4"
-                cols="90"></textarea>
+                cols="90">environment: 'https://demo.docusign.net'
+accountId: '4c887f32-f263-4765-8047-93ef8eb7af26'
+clickwrapId: 'e88d9095-cb2e-4252-86ad-70443184099f'</textarea>
             </p>
             <small id="clickcodeHelp" class="form-text text-muted">
               This field is required: Use the <b>Get Code</b> button from the DocuSign webtool.
               Copy the entire Clickwrap code block into this field.</small>
             <small id="feedback" class="form-text text-muted"></small>
           </div>
-        
 
-          <button class="mb-3 btn btn-sm btn-outline-info font-weight-bold" type="button" data-toggle="collapse"
+          <button class="mb-3 btn btn-sm btn-outline-primary font-weight-bold" type="button" data-toggle="collapse"
             data-target="#customSection" aria-controls="navbarHeader" aria-expanded="false"
             aria-label="Toggle navigation">
             Custom Options
@@ -96,11 +105,10 @@
               </div>
             </div>
           </div>
-          
 
           <p><strong>Save your custom demo URL</strong>
             <br /><input type="text" class="form-control input-sm" id="saveUrl">
-            <button class="m-2 btn btn-sm btn-outline-info" type="button" id="saveUrlBtn" aria-expanded="false"
+            <button class="m-2 btn btn-sm btn-outline-primary" type="button" id="saveUrlBtn" aria-expanded="false"
               aria-label="Copy to clipboard">
               Copy to clipboard
             </button>
@@ -115,7 +123,7 @@
   </div>
 
   <!-- Spinner -->
-  <div id="loader" class="loader"></div>
+  <div id="spinner" class="spinner"></div>
 
   <!-- Modal -->
   <div class="modal fade" id="gifModal" tabindex="-1" role="dialog" aria-labelledby="gifModalLabel" aria-hidden="true">
@@ -139,9 +147,8 @@
     </div>
   </div>
 
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.slim.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.min.js"></script>
   <script>
     $(document).ready(function () {
 
@@ -149,31 +156,29 @@
 
       let headerName = "default";
 
-      $('#fileUpload').change(function() {
-        document.getElementById("loader").style.display = "block";
+      $('#fileUpload').change(function () {
+        document.getElementById("spinner").style.display = "block";
         document.getElementById('clickSubmit').disabled = true;
         this.disabled = true;
 
-        let file = this.files[0];
-        if (file != undefined) {
+        const inputFile = this.files[0];
+        if (inputFile != undefined) {
           let randomString = Math.random().toString(36).substr(2, 5);
-          let ext = file.name.substring(file.name.lastIndexOf('.') + 1);
+          let ext = inputFile.name.substring(inputFile.name.lastIndexOf('.') + 1);
           headerName = randomString + "." + ext;
 
-          formData = new FormData();
-          formData.append("image", file, headerName);
-          $.ajax({
-            url: "upload.php",
-            type: "POST",
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: (data) => {
-              urlUpdate();
-              document.getElementById("loader").style.display = "none";
-              document.getElementById('clickSubmit').disabled = false;
-            }
-          });
+          const endpoint = "upload.php";
+          const formData = new FormData();
+          formData.append("customHeader", inputFile, headerName);
+
+          fetch(endpoint, {
+            method: "post",
+            body: formData
+          }).then(response => {
+            urlUpdate();
+            document.getElementById("spinner").style.display = "none";
+            document.getElementById('clickSubmit').disabled = false;
+          }).catch(console.error);
         }
       })
 
